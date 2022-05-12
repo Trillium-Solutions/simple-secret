@@ -4,6 +4,7 @@
 *.dll
 *.so
 *.dylib
+simple-secret
 
 # Test binary, built with `go test -c`
 *.test
@@ -11,5 +12,9 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+# Editor temp files.
+*.swp
+
 # Dependency directories (remove the comment below to include it)
 # vendor/
+testdata/password_is_secret_modified.yml
