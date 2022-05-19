@@ -13,6 +13,7 @@ import (
 
 var vaultFile string
 var passwordFile string
+var listKeys bool
 var getAllKeys bool
 var getKey string
 var putKey string
@@ -24,6 +25,7 @@ func init() {
 	flag.StringVar(&passwordFile, "passwordFile", "", "File containing the vault password.")
 	flag.StringVar(&passwordFile, "P", "", "Short form of -passwordFile")
 
+	flag.BoolVar(&listKeys, "list", false, "Show a full list of keys, but without their values.")
 	flag.BoolVar(&getAllKeys, "view", false, "Show the full contents of the vault.")
 	flag.StringVar(&getKey, "get", "", "Get a key.")
 	flag.StringVar(&putKey, "put", "", "Put a key. This modifies the vault.")
@@ -41,6 +43,25 @@ func getAll(vaultFile string, password string) {
 	}
 	fmt.Printf("%s", yaml_str)
 }
+
+func list(vaultFile string, password string) {
+	yaml_str, err := vault.DecryptFile(vaultFile, password)
+	yaml_bin := []byte(yaml_str)
+	if err != nil {
+		log.Fatalf("error decrypting file: %s\n", err)
+	}
+
+	m := make(map[string]string)
+	err = yaml.Unmarshal(yaml_bin, &m)
+	if err != nil {
+		log.Fatalf("error unmarshaling yaml %s\n", err)
+	}
+
+    for k, _ := range(m) {
+        fmt.Printf("%s\n", k)
+    }
+}
+
 
 func get(vaultFile string, password string, key string) {
 	yaml_str, err := vault.DecryptFile(vaultFile, password)
@@ -104,6 +125,11 @@ func main() {
 	if getAllKeys {
 		getAll(vaultFile, password)
 	}
+
+	if listKeys {
+		list(vaultFile, password)
+	}
+
 
 	if getKey != "" {
 		get(vaultFile, password, getKey)

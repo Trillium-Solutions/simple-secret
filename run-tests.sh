@@ -14,6 +14,19 @@ EOF
 echo ===
 echo
 
+cat <<EOF
+### Test listing keys. Output should be:
+===
+hello
+a
+b
+===
+EOF
+./simple-secret -passwordFile ./testdata/password_file.txt -vaultFile ./testdata/password_is_secret.yml -list
+echo ===
+echo
+
+
 # Test getting keys.
 cat <<EOF
 
